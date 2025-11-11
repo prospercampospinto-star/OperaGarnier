@@ -3,9 +3,6 @@ import org.lwjgl.opengl.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
 
 public class Main {
     private long window;
@@ -91,8 +88,8 @@ public class Main {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             // Draw triangle
-            triangle.drawTriangle();
-            triangle2.drawTriangle();
+            triangle.draw();
+            triangle2.draw();
 
 
             shader.set();
@@ -100,15 +97,15 @@ public class Main {
             glfwSwapBuffers(window);
             glfwPollEvents();
 
-            triangle.updateTriangle();
-            triangle2.updateTriangle();
+            triangle.update();
+            triangle2.update();
 
         }
     }
 
 
     private void cleanup() {
-        triangle.cleanupTriangle();
+        triangle.cleanup();
         shader.cleanup();
         glfwDestroyWindow(window);
         glfwTerminate();
