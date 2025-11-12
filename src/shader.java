@@ -13,22 +13,30 @@ public class shader {
 
     public void init() {
 
-        // Create shaders
+
+
+         //Create shaders
         String vertexShader = """
             #version 330 core
-            layout (location = 0) in vec3 aPos;
             
+            
+            
+            layout (location = 0) in vec3 aPos;
+
             void main() {
                 gl_Position = vec4(aPos, 1.0);
             }
             """;
 
+
+
+
         String fragmentShader = """
             #version 330 core
-            out vec4 FragColor;
+            out vec4 frag_Color;
             
             void main() {
-                FragColor = vec4(1.0, 0.5, 0.2, 1.0); // Orange color
+                frag_Color = vec4(1.0, 1.0, 0.7, 1.0); // Orange color
             }
             """;
 

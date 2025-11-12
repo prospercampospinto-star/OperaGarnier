@@ -2,9 +2,10 @@ import java.util.Vector;
 
 public class vector {
 
-    public int size;
     private float x, y, z;
     public float args[];
+
+    public int size;
 
     public float getX() {
         return x;

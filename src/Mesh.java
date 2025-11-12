@@ -15,44 +15,75 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class Mesh {
+    float time = nanoTime();
+
     int vao, vbo;
-
-
 
     vector[] Vertices = {};
 
     float[] vertices = {};
     private float[] rootvertices = {};
+
+    int vertexSize;
+
+    Matrix Translation = new Matrix(
+            new float[]{1, 0, 0, 0},
+            new float[]{0, 1, 0, 0},
+            new float[]{0, 0, 1, 0},
+            new float[]{0, 0, 0, 1}
+    );
+
+    Matrix Rotation = new Matrix(
+            new float[]{1, 0, 0, 0},
+            new float[]{0, 1, 0, 0},
+            new float[]{0, 0, 1, 0},
+            new float[]{0, 0, 0, 1}
+    );
+
+    Matrix Scale = new Matrix(
+            new float[]{1, 0, 0, 0},
+            new float[]{0, 1, 0, 0},
+            new float[]{0, 0, 1, 0},
+            new float[]{0, 0, 0, 1}
+    );
+
+    Matrix MVP = new Matrix(
+            new float[]{1, 0, 0, 0},
+            new float[]{0, 1, 0, 0},
+            new float[]{0, 0, 1, 0},
+            new float[]{0, 0, 0, 1}
+    );
+
+
     private shader shader = new shader();
 
-    float time = nanoTime();
 
     public void setVertices(float[] vertices) {
         this.vertices = vertices;
     }
-
     private void addVertex(vector vertex) {
         this.vertices = util.concatenate(this.vertices, vertex.get());
     }
 
+    public Mesh() {
+    }
 
 
-    public void init(vector[] Vertices) {
-        // Triangle vertices (x, y, z)
+    public Mesh(vector... vertices) {
+        this();
+        this.Vertices = vertices;
 
-//        vertices = new float[]{
-//                0.0f, 0.5f, 0.0f,   // Top
-//                0.48f, 0.15f, 0.0f, // Top right
-//                0.29f, -0.40f, 0.0f, // Bottom right
-//                -0.29f, -0.40f, 0.0f, // Bottom left
-//                -0.48f, 0.15f, 0.0f  // Top left
-//        };
 
-        vertices = vector.toVertices(Vertices);
+        System.out.println(this.Vertices);
+        this.vertices = vector.toVertices(vertices);
 
-        System.out.println(vertices.toString());
 
-        rootvertices = vertices;
+        rootvertices = this.vertices;
+
+    }
+
+    public void init(){
+
 
         // Create VAO
         vao = glGenVertexArrays();
@@ -60,7 +91,7 @@ public class Mesh {
 
         // Create VBO and upload data
         vbo = glGenBuffers();
-
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
     }
 
@@ -74,32 +105,11 @@ public class Mesh {
 
         this.vertices = vector.toVertices(this.Vertices);
 
-//        int i;
-//
-//        for (i = 0; i < this.vertices.length;  i+=3) {
-//            this.vertices[i] = (float) (this.vertices[i] + 0.004f*(Math.cos(time*0.000000001)));
-//
-//        }
-//
-//        for (i = 1; i < this.vertices.length;  i+=3) {
-//            this.vertices[i] = (float) (this.vertices[i] + 0.004f*(Math.sin(time*0.000000001)));
-//
-//        }
-//
-//
-//        for (i = 2; i < this.vertices.length;  i+=3) {
-//            this.vertices[i] = (float) (this.vertices[i] + 0.0008f*(Math.cos(time*0.000000001)));
-//
-//        }
+        int programID = glCreateProgram();
 
-    }
+        int MatrixID = glGetUniformLocation(programID, "MVP");
 
-
-
-    public void draw(){
-
-        glBindVertexArray(vao);
-        glDrawArrays(GL_TRIANGLE_FAN, 0, 5);
+        glUniformMatrix4fv(MatrixID, false, MVP.toFloat());
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         FloatBuffer buffer = MemoryUtil.memAllocFloat(vertices.length);
@@ -107,8 +117,24 @@ public class Mesh {
         glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
         MemoryUtil.memFree(buffer);
 
+    }
+
+
+
+    public void draw(){
+
+        vertexSize = Vertices[0].size;
+
+        glPointSize(10.0f);
+
+        glBindVertexArray(vao);
+        glDrawArrays(GL_POINTS, 0, vertices.length/vertexSize);
+
+
+
+
         // Set up vertex attributes
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * Float.BYTES, 0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, vertexSize * Float.BYTES, 0);
         glEnableVertexAttribArray(0);
     }
 
