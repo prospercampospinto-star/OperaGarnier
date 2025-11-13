@@ -8,6 +8,7 @@ public class Matrix {
     }
 
 
+
     public float[][] get() {
         return matrix;
     }
@@ -39,15 +40,16 @@ public class Matrix {
         return cell;
     }
 
-    public void multiply(Matrix matrix1){
+    public static Matrix multiply(Matrix matrix1, Matrix matrix2){
 
-        float[][] M1 = this.get();
-        float[][] M2 = matrix1.get();
+        float[][] M1 = matrix1.get();
+        float[][] M2 = matrix2.get();
 
 
         float[][] M3 = new float[M1.length][M2[0].length];
 
         if (M1[0].length != M2.length) {
+
             throw new IllegalArgumentException(
                     "Cannot multiply: columns of first matrix (" + M1[0].length +
                             ") must equal rows of second matrix (" + M2.length + ")"
@@ -61,7 +63,7 @@ public class Matrix {
         }
 
 
-        this.matrix = M3;
+        return new Matrix(M3);
 
     }
 
@@ -84,8 +86,42 @@ public class Matrix {
     }
 
 
+    public void shift(vector targetVector){
 
-//
+        Matrix shiftMatrix = new Matrix(
+                new float[]{1, 0, 0, targetVector.getX()},
+                new float[]{0, 1, 0, targetVector.getY()},
+                new float[]{0, 0, 1, targetVector.getZ()},
+                new float[]{0, 0, 0, 1}
+        );
+
+    }
+
+    public void rotate(vector targetVector, vector rotation){
+
+
+
+    }
+
+    public void flip() {
+
+
+
+        float[][] flipped = new float[matrix[0].length][matrix.length];
+
+
+        for (int i = 0; i < this.matrix.length; i++) {
+            for (int j = 0; j < this.matrix[i].length; j++) {
+
+
+                flipped[j][i] = matrix[i][j];
+
+            }
+        }
+        this.matrix = flipped;
+    }
+
+
 //    public static void main(String args[]){
 //        Matrix M1 = new Matrix(
 //                new float[]{1, 2, 3},
@@ -102,6 +138,8 @@ public class Matrix {
 //        );
 //
 //        M2.multiply(M1);
+//        M2.print();
+//        M2.flip();
 //        M2.print();
 //
 //        float[] vertices= new float[]{};

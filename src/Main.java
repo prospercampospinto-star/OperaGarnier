@@ -47,10 +47,12 @@ public class Main {
 
         Triangle triangle = new Triangle(v1, v2, v3, v4, v5);
         Triangle triangle2 = new Triangle(v6, v7, v8, v9, v10);
+        Circle circle = new Circle(0.7f, 20);
 
 
         meshes.add(triangle);
         meshes.add(triangle2);
+        meshes.add(circle);
 
 
         for (Mesh mesh: meshes){
@@ -86,9 +88,6 @@ public class Main {
             glfwSwapBuffers(window);
             glfwPollEvents();
 
-
-
-
         }
     }
 
@@ -97,7 +96,7 @@ public class Main {
 
 
         for (Mesh mesh: meshes) {
-            mesh.update();
+            mesh.cleanup();
         }
         shader.cleanup();
         glfwDestroyWindow(window);

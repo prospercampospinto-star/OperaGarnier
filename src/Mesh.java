@@ -1,6 +1,7 @@
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
+import java.util.Arrays;
 
 import static java.lang.System.nanoTime;
 import static org.lwjgl.opengl.GL11.*;
@@ -20,16 +21,30 @@ public class Mesh {
     int vao, vbo;
 
     vector[] Vertices = {};
+    vector[] rootVertices = {};
 
     float[] vertices = {};
-    private float[] rootvertices = {};
 
     int vertexSize;
 
-    Matrix Translation = new Matrix(
+    vector origin = new vector(0, 0, 0);
+    vector translation = new vector(0, 0, 0);
+    vector rotation = new vector(0, 0, 0);
+    vector scale = new vector(1, 1, 1);
+
+    vector[] transform = {origin, translation, rotation, scale};
+
+    Matrix Init = new Matrix(
             new float[]{1, 0, 0, 0},
             new float[]{0, 1, 0, 0},
             new float[]{0, 0, 1, 0},
+            new float[]{0, 0, 0, 1}
+    );
+
+    Matrix Translation = new Matrix(
+            new float[]{1, 0, 0, translation.getX()},
+            new float[]{0, 1, 0, translation.getY()},
+            new float[]{0, 0, 1, translation.getZ()},
             new float[]{0, 0, 0, 1}
     );
 
@@ -69,16 +84,14 @@ public class Mesh {
     }
 
 
-    public Mesh(vector... vertices) {
+    public Mesh(vector... Vertices) {
         this();
-        this.Vertices = vertices;
 
 
-        System.out.println(this.Vertices);
-        this.vertices = vector.toVertices(vertices);
+        this.Vertices = Vertices;
+        this.vertices = vector.toVertices(Vertices);
 
-
-        rootvertices = this.vertices;
+        this.rootVertices = Arrays.copyOf(Vertices, Vertices.length);
 
     }
 
@@ -97,13 +110,48 @@ public class Mesh {
 
     public void update() {
         time=nanoTime();
+//
+//        for (int i = 0; i < this.Vertices.length;  i++) {
+//            this.Vertices[i].rotate(0.01, 0.005, -0.002);
+//
+//        }
+
+        vector speed = new vector(0.001f, 0.001f, 0.001f);
+        translate(speed);
+
+        Translation = new Matrix(
+                new float[]{1, 0, 0, translation.getX()},
+                new float[]{0, 1, 0, translation.getY()},
+                new float[]{0, 0, 1, translation.getZ()},
+                new float[]{0, 0, 0, 1}
+        );
+
+//
+//        Translation = new Matrix(
+//                new float[]{1, 0, 0, 0},
+//                new float[]{0, 1, 0, 0},
+//                new float[]{0, 0, 1, 0},
+//                new float[]{translation.getX(), translation.getY(), translation.getZ(), 1}
+//        );
+
+//        MVP.matrix = Init.matrix;
+//        MVP.multiply(Translation);
+//        MVP.multiply(Rotation);
+//        MVP.multiply(Scale);
+
+        this.Vertices = Arrays.copyOf(rootVertices, rootVertices.length);
 
         for (int i = 0; i < this.Vertices.length;  i++) {
-            this.Vertices[i].rotate(0.01, 0.005, -0.002);
+
+            this.Vertices[i].print();
+
+            this.Vertices[i] = this.Vertices[i].multiplyM4(Translation);
+
 
         }
 
-        this.vertices = vector.toVertices(this.Vertices);
+
+
 
         int programID = glCreateProgram();
 
@@ -111,6 +159,8 @@ public class Mesh {
 
         glUniformMatrix4fv(MatrixID, false, MVP.toFloat());
 
+
+        this.vertices = vector.toVertices(this.Vertices);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         FloatBuffer buffer = MemoryUtil.memAllocFloat(vertices.length);
         buffer.put(vertices).flip();
@@ -119,19 +169,14 @@ public class Mesh {
 
     }
 
-
-
     public void draw(){
 
-        vertexSize = Vertices[0].size;
+        vertexSize = Vertices[0].get().length;
 
         glPointSize(10.0f);
 
         glBindVertexArray(vao);
         glDrawArrays(GL_POINTS, 0, vertices.length/vertexSize);
-
-
-
 
         // Set up vertex attributes
         glVertexAttribPointer(0, 3, GL_FLOAT, false, vertexSize * Float.BYTES, 0);
@@ -144,6 +189,16 @@ public class Mesh {
         glDeleteBuffers(vbo);
     }
 
+    public void translate(vector translated) {
+        this.translation.add(translated);
+    }
 
+    public void rotate(vector rotated) {
+        this.rotation.add(rotated);
+    }
+
+    public void scale(vector scaled) {
+        this.scale.multiply(scaled);
+    }
 
 }

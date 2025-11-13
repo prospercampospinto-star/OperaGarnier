@@ -1,8 +1,12 @@
-import java.util.Vector;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class vector {
 
-    private float x, y, z;
+    public float x;
+    public float y;
+    public float z;
     public float args[];
 
     public int size;
@@ -41,10 +45,42 @@ public class vector {
 
 
     public float[] get() {
+        float[] coords;
 
-        float[] coords = new float[]{this.x, this.y, this.z};
+        if (this.args!=null) {
+            coords = Arrays.copyOf(this.args, this.args.length + 3);
+
+            coords[0] = this.x;
+            coords[1] = this.y;
+            coords[2] = this.z;
+
+
+            for (int i = 3; i < coords.length; i++) {
+                coords[i] = this.args[i - 3];
+            }
+        } else {
+            coords = new float[]{this.x, this.y, this.z};
+        }
+
+
+
 
         return coords;
+    }
+
+    public void set(float... coords) {
+        this.x = coords[0];
+        this.y = coords[1];
+        this.z = coords[2];
+
+        if (coords.length>3) {
+            float[] newargs = new float[coords.length-3];
+            for (int i = 0; i<coords.length-3; i++) {
+                newargs[i] = coords[i];
+            }
+            this.args = newargs;
+        }
+
     }
 
 
@@ -71,6 +107,21 @@ public class vector {
         this.size = 3 + args.length;
     }
 
+    public vector(float[] coords){
+        this();
+        this.x = coords[0];
+        this.y = coords[1];
+        this.z = coords[2];
+    }
+
+    public vector(float[] coords, float args[]){
+        this();
+        this.x = coords[0];
+        this.y = coords[1];
+        this.z = coords[2];
+        this.args = args;
+    }
+
     public void add(vector delta){
 
         this.x += delta.x;
@@ -78,6 +129,49 @@ public class vector {
         this.z += delta.z;
 
     }
+
+
+    public void multiply(vector delta) {
+
+
+        this.x = this.x * delta.x;
+        this.y = this.y * delta.y;
+        this.z = this.z * delta.z;
+
+    }
+
+    public vector multiplyM4(Matrix matrix) {
+        vector extended = new vector(this.x, this.y, this.z, new float[]{1});
+
+        //extended.args = new float[]{1};
+//        if (this.args!=null) {
+//            extended.set(this.x, this.y, this.z, this.args[0]);
+//        }
+
+
+        Matrix Mresult = new Matrix(extended.get());
+
+
+        Mresult.flip();
+
+//        Mresult.print();
+//        matrix.print();
+
+
+
+
+        return new vector(Matrix.multiply(matrix, Mresult).toFloat());
+    }
+
+//    public void multiplyM(Matrix matrix) {
+//        Matrix Mresult = new Matrix(this.get());
+//
+//        Mresult.multiply(matrix);
+//
+//        this.set(Mresult.toFloat());
+//    }
+
+
 
     public void rotate(double angleX, double angleY, double angleZ){
 
@@ -108,5 +202,26 @@ public class vector {
 
     }
 
+    public void print(){
+        float[] coords;
 
+        if (this.args!=null) {
+            coords = Arrays.copyOf(this.args, this.args.length + 3);
+
+            coords[0] = this.x;
+            coords[1] = this.y;
+            coords[2] = this.z;
+
+
+            for (int i = 3; i < coords.length; i++) {
+                coords[i] = this.args[i - 3];
+            }
+        } else {
+            coords = new float[]{this.x, this.y, this.z};
+        }
+
+        for (float c : coords){
+            System.out.println(c);
+        }
+    }
 }

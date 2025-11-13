@@ -58,4 +58,15 @@ public class util{
         return c;
     }
 
+    public static vector[] concatenateV(vector[] a, vector[] b) {
+        int aLen = a.length;
+        int bLen = b.length;
+
+        vector[] c = (vector[]) Array.newInstance(a.getClass().getComponentType(), aLen+bLen);
+        System.arraycopy(a, 0, c, 0, aLen);
+        System.arraycopy(b, 0, c, aLen, bLen);
+
+        return c;
+    }
+
 }
