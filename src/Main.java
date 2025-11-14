@@ -45,14 +45,15 @@ public class Main {
         v10 = new vector(-0.48f, 0.15f, 0.4f);
 
 
+        Scatter scatter = new Scatter(0.7f, 0.9995f);
+        Circle circle = new Circle(0.7f, 20);
         Triangle triangle = new Triangle(v1, v2, v3, v4, v5);
         Triangle triangle2 = new Triangle(v6, v7, v8, v9, v10);
-        Circle circle = new Circle(0.7f, 20);
 
-
-        meshes.add(triangle);
-        meshes.add(triangle2);
-        meshes.add(circle);
+        meshes.add(scatter);
+//        meshes.add(circle);
+//        meshes.add(triangle);
+//        meshes.add(triangle2);
 
 
         for (Mesh mesh: meshes){

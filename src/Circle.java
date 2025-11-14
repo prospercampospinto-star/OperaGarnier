@@ -3,12 +3,13 @@ import java.util.Arrays;
 public class Circle extends Mesh {
 
     public Circle(float radius, int division){
+        super();
         init(radius, division);
     }
 
     public void init(float radius, int division) {
         vector v1 = new vector();
-        vector[] addV = new vector[]{v1};
+        vector[] addV = new vector[division];
         float x, y, z, angle;
 
         for (int i = 0; i<division; i++) {
@@ -19,9 +20,22 @@ public class Circle extends Mesh {
             y = (float) (radius * Math.sin(angle));
             z = 0;
 
-            v1.set(x, y, z);
-            addV = new vector[]{v1};
-            Vertices = Arrays.copyOf(addV, Vertices.length+1);
+            addV[i] = new vector(x, y, z);
+
+
+        }
+
+        Vertices = Arrays.copyOf(addV, addV.length);
+
+
+        for(vector vec: addV) {
+            vec.print();
+        }
+
+        System.out.println("EXPOSED:");
+
+        for(vector vec: Vertices) {
+            vec.print();
         }
 
     }

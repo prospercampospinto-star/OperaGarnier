@@ -110,45 +110,39 @@ public class Mesh {
 
     public void update() {
         time=nanoTime();
+
+        for (int i = 0; i < this.Vertices.length;  i++) {
+            this.Vertices[i].rotate(0.01, 0.005, -0.002);
+
+        }
 //
-//        for (int i = 0; i < this.Vertices.length;  i++) {
-//            this.Vertices[i].rotate(0.01, 0.005, -0.002);
-//
-//        }
-
-        vector speed = new vector(0.001f, 0.001f, 0.001f);
-        translate(speed);
-
-        Translation = new Matrix(
-                new float[]{1, 0, 0, translation.getX()},
-                new float[]{0, 1, 0, translation.getY()},
-                new float[]{0, 0, 1, translation.getZ()},
-                new float[]{0, 0, 0, 1}
-        );
-
+//        vector speed = new vector(0.001f, (float) (0.001*Math.cos(time*0.00000001)), 0.001f);
+//        translate(speed);
 //
 //        Translation = new Matrix(
-//                new float[]{1, 0, 0, 0},
-//                new float[]{0, 1, 0, 0},
-//                new float[]{0, 0, 1, 0},
-//                new float[]{translation.getX(), translation.getY(), translation.getZ(), 1}
+//                new float[]{1, 0, 0, translation.getX()},
+//                new float[]{0, 1, 0, translation.getY()},
+//                new float[]{0, 0, 1, translation.getZ()},
+//                new float[]{0, 0, 0, 1}
 //        );
-
+//
+//
+//
 //        MVP.matrix = Init.matrix;
 //        MVP.multiply(Translation);
 //        MVP.multiply(Rotation);
 //        MVP.multiply(Scale);
-
-        this.Vertices = Arrays.copyOf(rootVertices, rootVertices.length);
-
-        for (int i = 0; i < this.Vertices.length;  i++) {
-
-            this.Vertices[i].print();
-
-            this.Vertices[i] = this.Vertices[i].multiplyM4(Translation);
-
-
-        }
+//
+//        this.Vertices = Arrays.copyOf(rootVertices, rootVertices.length);
+//
+//        for (int i = 0; i < this.Vertices.length;  i++) {
+//
+//            //this.Vertices[i].print();
+//
+//            this.Vertices[i] = this.Vertices[i].multiplyM4(Translation);
+//
+//
+//        }
 
 
 
@@ -170,8 +164,8 @@ public class Mesh {
     }
 
     public void draw(){
-
-        vertexSize = Vertices[0].get().length;
+        //vertexSize = Vertices[0].get().length;
+        vertexSize =3;
 
         glPointSize(10.0f);
 
@@ -184,7 +178,6 @@ public class Mesh {
     }
 
     public void cleanup() {
-
         glDeleteVertexArrays(vao);
         glDeleteBuffers(vbo);
     }
