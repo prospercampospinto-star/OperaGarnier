@@ -1,5 +1,7 @@
 import java.util.Arrays;
 
+import static java.lang.System.nanoTime;
+
 public class Scatter extends Mesh{
 
     public Scatter(float radius, float density){
@@ -23,16 +25,21 @@ public class Scatter extends Mesh{
 
 
         vector[] addV = new vector[resolution];
-        float x, y, z, angle, distance;
+        float x, y, z, angleX, angleY, distance;
 
 
 
         for (int i = 0; i<resolution; i++) {
-            angle = (float) ((Math.random()-0.5)*6.20);
+            angleX = (float) ((Math.random()-0.5)*Math.PI*2);
+            angleY = (float) ((Math.random()-0.5)*Math.PI*2);
 
-            direction = new vector((float) (Math.cos(angle)), (float) (Math.sin(angle)), (float) (Math.tan(angle)));
-            distance = (float) (radius*Math.random());
-
+            direction = new vector(
+                    (float) (Math.cos(angleX)*Math.cos(angleY)),
+                    (float) (Math.cos(angleY)*Math.sin(angleX)),
+                    (float) (Math.sin(angleY))
+            );
+            distance = (float) (radius-radius*(Math.log(Math.random()+1)));
+            distance = 1;
             x = (float) (direction.getX()*distance);
             y = (float) (direction.getY()*distance);
             z = (float) (direction.getZ()*distance);

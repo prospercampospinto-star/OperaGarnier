@@ -112,8 +112,7 @@ public class Mesh {
         time=nanoTime();
 
         for (int i = 0; i < this.Vertices.length;  i++) {
-            this.Vertices[i].rotate(0.01, 0.005, -0.002);
-
+            this.Vertices[i].rotate(0.004, 0.003, -0.001);
         }
 //
 //        vector speed = new vector(0.001f, (float) (0.001*Math.cos(time*0.00000001)), 0.001f);
@@ -164,8 +163,7 @@ public class Mesh {
     }
 
     public void draw(){
-        //vertexSize = Vertices[0].get().length;
-        vertexSize =3;
+        vertexSize = Vertices[0].getFull().length;
 
         glPointSize(10.0f);
 

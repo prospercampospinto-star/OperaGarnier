@@ -45,9 +45,14 @@ public class vector {
 
 
     public float[] get() {
+
+        return new float[]{this.x, this.y, this.z};
+    }
+
+    public float[] getFull() {
         float[] coords;
 
-        if (this.args!=null) {
+        if (this.args != null) {
             coords = Arrays.copyOf(this.args, this.args.length + 3);
 
             coords[0] = this.x;
@@ -61,9 +66,6 @@ public class vector {
         } else {
             coords = new float[]{this.x, this.y, this.z};
         }
-
-
-
 
         return coords;
     }
@@ -107,12 +109,15 @@ public class vector {
         this.size = 3 + args.length;
     }
 
+
     public vector(float[] coords){
         this();
         this.x = coords[0];
         this.y = coords[1];
         this.z = coords[2];
     }
+
+
 
     public vector(float[] coords, float args[]){
         this();
@@ -121,6 +126,8 @@ public class vector {
         this.z = coords[2];
         this.args = args;
     }
+
+
 
     public void add(vector delta){
 
@@ -160,7 +167,7 @@ public class vector {
 
 
 
-        return new vector(Matrix.multiply(matrix, Mresult).toFloat());
+        return new vector(Matrix.multiply(matrix, Mresult).toFloat(), this.args);
     }
 
 //    public void multiplyM(Matrix matrix) {
@@ -176,9 +183,7 @@ public class vector {
     public void rotate(double angleX, double angleY, double angleZ){
 
         vector rotatedX = util.rotateX(this, angleX);
-
         vector rotatedY = util.rotateY(rotatedX, angleY);
-
         vector rotatedZ = util.rotateZ(rotatedY, angleZ);
 
 
@@ -191,6 +196,7 @@ public class vector {
     public static float[] toVertices(vector[] Vertices) {
 
         float[] fvertices = new float[]{};
+
 
         for (int i = 0; i<Vertices.length; i++) {
 
