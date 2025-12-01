@@ -1,3 +1,5 @@
+package cyclops;
+
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
@@ -14,22 +16,41 @@ import static org.lwjgl.glfw.GLFW.GLFW_REFRESH_RATE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
-import static org.lwjgl.opengl.GL11.GL_TRUE;
-import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.*;
 
-public class renderer {
+public class Renderer {
+
+    private long monitor;
+    private GLFWVidMode mode;
+
+    public GLFWVidMode getMode() {
+        return mode;
+    }
+
+    public long getMonitor() {
+        return monitor;
+    }
+
+    public void setMonitor(long monitor) {
+        this.monitor = monitor;
+    }
+
+    public Renderer() {
+        this.initGL();
+    }
 
 
-
-    public static void initGL() {
+    public void initGL() {
 
         if (!glfwInit()) {
             throw new IllegalStateException("Unable to initialize GLFW");
         }
 
-        long monitor = glfwGetPrimaryMonitor();
+        monitor = glfwGetPrimaryMonitor();
 
-        GLFWVidMode mode = glfwGetVideoMode(monitor);
+        mode = glfwGetVideoMode(monitor);
+
+
 
         glfwWindowHint(GLFW_RED_BITS, mode.redBits());
         glfwWindowHint(GLFW_GREEN_BITS, mode.greenBits());
@@ -42,7 +63,9 @@ public class renderer {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // Needed for Mac
 
-        Main.window = glfwCreateWindow(mode.width(), mode.height(), "Main", 0, 0);
+
+
+        Main.window = glfwCreateWindow(mode.width(), mode.height(), "cyclops.Main", 0, 0);
 
         if (Main.window == 0) {
             throw new RuntimeException("Failed to create window");

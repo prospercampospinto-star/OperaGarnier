@@ -1,3 +1,5 @@
+package cyclops;
+
 import java.util.Arrays;
 
 public class Circle extends Mesh {
@@ -14,7 +16,7 @@ public class Circle extends Mesh {
 
         for (int i = 0; i<division; i++) {
 
-            System.out.println(i);
+            //System.out.println(i);
             angle = (float) (Math.PI*2/division) * i;
             x = (float) (radius * Math.cos(angle));
             y = (float) (radius * Math.sin(angle));

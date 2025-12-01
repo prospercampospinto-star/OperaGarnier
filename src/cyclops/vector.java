@@ -1,5 +1,5 @@
-import java.sql.Array;
-import java.util.ArrayList;
+package cyclops;
+
 import java.util.Arrays;
 
 public class vector {
@@ -45,8 +45,10 @@ public class vector {
 
 
     public float[] get() {
-
-        return new float[]{this.x, this.y, this.z};
+        if (args != null && args.length != 0) {
+            return new float[]{this.x, this.y, this.z, this.args[0]};
+        }
+        return new float[]{this.x, this.y, this.z, 1.0f};
     }
 
     public float[] getFull() {
@@ -148,15 +150,13 @@ public class vector {
     }
 
     public vector multiplyM4(Matrix matrix) {
-        vector extended = new vector(this.x, this.y, this.z, new float[]{1});
-
         //extended.args = new float[]{1};
 //        if (this.args!=null) {
 //            extended.set(this.x, this.y, this.z, this.args[0]);
 //        }
 
 
-        Matrix Mresult = new Matrix(extended.get());
+        Matrix Mresult = new Matrix(this.get());
 
 
         Mresult.flip();
@@ -170,8 +170,8 @@ public class vector {
         return new vector(Matrix.multiply(matrix, Mresult).toFloat(), this.args);
     }
 
-//    public void multiplyM(Matrix matrix) {
-//        Matrix Mresult = new Matrix(this.get());
+//    public void multiplyM(cyclops.Matrix matrix) {
+//        cyclops.Matrix Mresult = new cyclops.Matrix(this.get());
 //
 //        Mresult.multiply(matrix);
 //
@@ -226,8 +226,10 @@ public class vector {
             coords = new float[]{this.x, this.y, this.z};
         }
 
+        System.out.print("[ ");
         for (float c : coords){
-            System.out.println(c);
+            System.out.print(c + ", ");
         }
+        System.out.println("]");
     }
 }

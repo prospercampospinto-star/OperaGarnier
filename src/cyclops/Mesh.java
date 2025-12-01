@@ -1,8 +1,11 @@
+package cyclops;
+
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
 import java.util.Arrays;
 
+import static cyclops.Main.getShaderProgram;
 import static java.lang.System.nanoTime;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -76,6 +79,7 @@ public class Mesh {
     public void setVertices(float[] vertices) {
         this.vertices = vertices;
     }
+
     private void addVertex(vector vertex) {
         this.vertices = util.concatenate(this.vertices, vertex.get());
     }
@@ -111,42 +115,36 @@ public class Mesh {
     public void update() {
         time=nanoTime();
 
-        for (int i = 0; i < this.Vertices.length;  i++) {
-            this.Vertices[i].rotate(0.004, 0.003, -0.001);
-        }
-//
-//        vector speed = new vector(0.001f, (float) (0.001*Math.cos(time*0.00000001)), 0.001f);
-//        translate(speed);
-//
-//        Translation = new Matrix(
-//                new float[]{1, 0, 0, translation.getX()},
-//                new float[]{0, 1, 0, translation.getY()},
-//                new float[]{0, 0, 1, translation.getZ()},
-//                new float[]{0, 0, 0, 1}
-//        );
-//
-//
-//
-//        MVP.matrix = Init.matrix;
-//        MVP.multiply(Translation);
-//        MVP.multiply(Rotation);
-//        MVP.multiply(Scale);
-//
-//        this.Vertices = Arrays.copyOf(rootVertices, rootVertices.length);
-//
 //        for (int i = 0; i < this.Vertices.length;  i++) {
-//
-//            //this.Vertices[i].print();
-//
-//            this.Vertices[i] = this.Vertices[i].multiplyM4(Translation);
-//
-//
+//            this.Vertices[i].rotate(0.004, 0.003, -0.001);
 //        }
 
+        cyclops.vector speed = new cyclops.vector(0.00f, (float) (0.001*Math.cos(time*0.00000001)), 0.00001f);
+        cyclops.vector angularSpeed = new cyclops.vector(0.0001f, 0.0001f, (float) (0.01*Math.cos(time*0.0000000001)));
+        cyclops.vector deltaScale = new cyclops.vector(1.0f, (float) (1*Math.sin(time*0.000000001)), (float) (1*Math.cos(time*0.0000000001)));
+
+
+        translate(speed);
+        rotate(angularSpeed);
+        scale(deltaScale);
+
+        updateMatrices();
+
+        //MVP.print();
 
 
 
-        int programID = glCreateProgram();
+
+        this.Vertices = Arrays.copyOf(rootVertices, rootVertices.length);
+
+        for (int i = 0; i < this.Vertices.length;  i++) {
+            //System.out.print("vertice :");
+            //this.Vertices[i].print();
+
+            this.Vertices[i] = this.Vertices[i].multiplyM4(MVP);
+        }
+
+        int programID = getShaderProgram();
 
         int MatrixID = glGetUniformLocation(programID, "MVP");
 
@@ -189,7 +187,23 @@ public class Mesh {
     }
 
     public void scale(vector scaled) {
-        this.scale.multiply(scaled);
+        this.scale = scaled;
+    }
+
+    public void updateMatrices() {
+        Translation = Translation.shift(translation);
+
+        float a=rotation.getX();
+
+        Rotation = Rotation.rotate(rotation);
+
+        Scale = Scale.scale(scale);
+
+        MVP.matrix = Init.matrix;
+        MVP.multiply(Translation);
+        MVP.multiply(Rotation);
+        MVP.multiply(Scale);
+
     }
 
 }

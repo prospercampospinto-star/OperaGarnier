@@ -1,3 +1,8 @@
+package cyclops;
+
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
 public class Matrix {
 
     public float[][] matrix;
@@ -38,6 +43,10 @@ public class Matrix {
             cell += M1[row][i] * M2[i][col];
         }
         return cell;
+    }
+
+    public void multiply(Matrix matrix2) {
+        this.matrix = multiply(this, matrix2).get();
     }
 
     public static Matrix multiply(Matrix matrix1, Matrix matrix2){
@@ -86,9 +95,9 @@ public class Matrix {
     }
 
 
-    public void shift(vector targetVector){
+    public Matrix shift(vector targetVector){
 
-        Matrix shiftMatrix = new Matrix(
+        return new Matrix(
                 new float[]{1, 0, 0, targetVector.getX()},
                 new float[]{0, 1, 0, targetVector.getY()},
                 new float[]{0, 0, 1, targetVector.getZ()},
@@ -97,9 +106,27 @@ public class Matrix {
 
     }
 
-    public void rotate(vector targetVector, vector rotation){
+    public Matrix rotate(vector rotation){
+        double a=rotation.getX(), b= rotation.getY(), y= rotation.getZ();
 
 
+        return new Matrix(
+                new float[][]{  {(float) (cos(a) * cos(b) * cos(y) - sin(a) * sin(y)),  (float) (- cos(a) * cos(b) * sin(y) - sin(a) * cos(y)), (float) (cos(a) * sin(b)),  0},
+                                {(float) (sin(a) * cos(b) * cos(y) + cos(a) * sin(y)),  (float) (- sin(a) * cos(b) * sin(y) + cos(a) * cos(y)), (float) (sin(a) * sin(b)),  0},
+                                {(float) (- sin(b) * cos(y)),                           (float) (sin(b) * sin(y)),                              (float) cos(b),             0},
+                                {0,                                                     0,                                                      0,                          0}}
+        );
+
+    }
+
+    public Matrix scale(vector targetVector){
+
+        return new Matrix(
+                new float[]{targetVector.getX(),    0, 0, 0},
+                new float[]{0,                      targetVector.getY(), 0, 0},
+                new float[]{0, 0, targetVector.getZ(), 0},
+                new float[]{0, 0, 0, 1}
+        );
 
     }
 
@@ -123,13 +150,13 @@ public class Matrix {
 
 
 //    public static void main(String args[]){
-//        Matrix M1 = new Matrix(
+//        cyclops.Matrix M1 = new cyclops.Matrix(
 //                new float[]{1, 2, 3},
 //                new float[]{4, 5, 6},
 //                new float[]{7, 8, 9},
 //                new float[]{10, 11, 12}
 //        );
-//        Matrix M2 = new Matrix(
+//        cyclops.Matrix M2 = new cyclops.Matrix(
 //                new float[]{1, 0, 0, 0},
 //                new float[]{0, 1, 0, 0},
 //                new float[]{0, 0, 1, 0},
@@ -144,8 +171,8 @@ public class Matrix {
 //
 //        float[] vertices= new float[]{};
 //
-//        vertices = util.concatenate(vertices, M1.toFloat());
-//        vertices = util.concatenate(vertices, M2.toFloat());
+//        vertices = cyclops.util.concatenate(vertices, M1.toFloat());
+//        vertices = cyclops.util.concatenate(vertices, M2.toFloat());
 //
 //        for (float vertice : vertices)
 //            System.out.print(vertice+", " );

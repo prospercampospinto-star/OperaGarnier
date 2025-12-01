@@ -1,3 +1,6 @@
+package cyclops;
+
+import static cyclops.Main.getShaderProgram;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
 import static org.lwjgl.opengl.GL20.glAttachShader;
@@ -11,8 +14,8 @@ import static org.lwjgl.opengl.GL20.glShaderSource;
 public class shader {
     private int shaderProgram;
 
-    public void init() {
 
+    public void init() {
 
 
          //Create shaders
@@ -20,9 +23,9 @@ public class shader {
             #version 330 core
             
             
-            
             layout (location = 0) in vec3 aPos;
-
+           
+            
             void main() {
                 gl_Position = vec4(aPos, 1.0);
             }
@@ -48,7 +51,7 @@ public class shader {
         glShaderSource(fs, fragmentShader);
         glCompileShader(fs);
 
-        shaderProgram = glCreateProgram();
+        shaderProgram = getShaderProgram();
         glAttachShader(shaderProgram, vs);
         glAttachShader(shaderProgram, fs);
         glLinkProgram(shaderProgram);

@@ -1,9 +1,11 @@
+package cyclops;
+
 import java.lang.reflect.Array;
 
 public class util{
 
 
-//    public static vector rotate(vector targetVector, vector anchorVector, vector rotateVector) {
+//    public static cyclops.vector rotate(cyclops.vector targetVector, cyclops.vector anchorVector, cyclops.vector rotateVector) {
 //
 //        return targetVector;
 //

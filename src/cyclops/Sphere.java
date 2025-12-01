@@ -1,12 +1,13 @@
+package cyclops;
+
 import java.util.Arrays;
 
-import static java.lang.System.nanoTime;
+public class Sphere extends Mesh{
 
-public class Scatter extends Mesh{
 
-    public Scatter(float radius, float density){
-        super();
-        init(radius, density);
+    public Sphere(float size, int rows, int cols){
+
+
     }
 
     public void init(float radius, float density) {
@@ -33,12 +34,8 @@ public class Scatter extends Mesh{
             angleX = (float) ((Math.random()-0.5)*Math.PI*2);
             angleY = (float) ((Math.random()-0.5)*Math.PI*2);
 
-            direction = new vector(
-                    (float) (Math.cos(angleX)*Math.cos(angleY)),
-                    (float) (Math.cos(angleY)*Math.sin(angleX)),
-                    (float) (Math.sin(angleY))
-            );
-            distance = (float) (radius-radius*(Math.log(Math.random()+1)));
+            direction = new vector((float) (Math.cos(angleX)*Math.cos(angleY)), (float) (Math.cos(angleY)*Math.sin(angleX)), (float) (Math.sin(angleY)));
+            distance = (float) (radius*Math.random());
             distance = 1;
             x = (float) (direction.getX()*distance);
             y = (float) (direction.getY()*distance);

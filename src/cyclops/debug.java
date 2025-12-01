@@ -1,3 +1,5 @@
+package cyclops;
+
 import java.util.Arrays;
 
 public class debug {

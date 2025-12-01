@@ -1,11 +1,12 @@
+package cyclops;
+
 import java.util.Arrays;
 
-public class Sphere extends Mesh{
+public class Scatter extends Mesh{
 
-
-    public Sphere(float size, int rows, int cols){
-
-
+    public Scatter(float radius, float density){
+        super();
+        init(radius, density);
     }
 
     public void init(float radius, float density) {
@@ -29,22 +30,30 @@ public class Sphere extends Mesh{
 
 
         for (int i = 0; i<resolution; i++) {
-            angleX = (float) ((Math.random()-0.5)*Math.PI*2);
-            angleY = (float) ((Math.random()-0.5)*Math.PI*2);
 
-            direction = new vector((float) (Math.cos(angleX)*Math.cos(angleY)), (float) (Math.cos(angleY)*Math.sin(angleX)), (float) (Math.sin(angleY)));
-            distance = (float) (radius*Math.random());
-            distance = 1;
+            angleX = (float) ((Math.random())*Math.PI*2);
+            angleY = (float) ((Math.random())*Math.PI*2);
+
+
+
+            direction = new vector(
+                    (float) (Math.cos(angleX)*Math.cos(angleY)),
+                    (float) (Math.cos(angleY)*Math.sin(angleX)),
+                    (float) (Math.sin(angleY))
+            );
+            distance = (float) (radius-radius*(Math.log(Math.random()+1)));
+            distance = radius;
             x = (float) (direction.getX()*distance);
             y = (float) (direction.getY()*distance);
             z = (float) (direction.getZ()*distance);
 
-            addV[i] = new vector(x, y, z);
+            addV[i] = new vector(x, y, z, new float[]{1.0f});
 
 
         }
 
         Vertices = Arrays.copyOf(addV, addV.length);
+        rootVertices = Arrays.copyOf(Vertices, Vertices.length);
 
 
     }
